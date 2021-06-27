@@ -1,0 +1,12 @@
+{
+	"version": 3,
+	"names": [],
+	"mappings": "",
+	"sources": [
+		"example.css"
+	],
+	"sourcesContent": [
+		"body {\n\tdisplay: flex;\n\tbackground-color: aquamarine;\n\tcolor: blanchedalmond;\n}\n\n.page {\n\tdisplay: grid;\n\tgrid-gap: 33px;\n\tgrid-template:\n\t\t\"head head  head\" 1fr\n\t\t\"nav  main  main\" minmax(100px, 1fr)\n\t\t\"nav  foot  foot\" 2fr /\n\t\t1fr 100px 1fr;\n}\n.page__head {\n\tgrid-area: head;\n}\n.page__nav {\n\tgrid-area: nav;\n}\n.page__main {\n\tgrid-area: main;\n}\n.page__footer {\n\tgrid-area: foot;\n}\n"
+	],
+	"file": "../example.css"
+}

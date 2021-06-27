@@ -1,0 +1,32 @@
+{
+  "name": "postcss",
+  "version": "1.0.0",
+  "description": "config for postCSS",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aminkhorrami/postCSS-config.git"
+  },
+  "keywords": [
+    "postcss"
+  ],
+  "author": "https://github.com/aminkhorrami",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aminkhorrami/postCSS-config/issues"
+  },
+  "homepage": "https://github.com/aminkhorrami/postCSS-config#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "cssnano": "^5.0.6",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-postcss": "^9.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "postcss": "^8.3.5"
+  }
+}
