@@ -1,48 +1,59 @@
-const gulp = require("gulp");
+// old approach
+
+const { src, dest, series } = require("gulp");
 const postcss = require("gulp-postcss");
+const cssnano = require("cssnano");
 const autoprefixer = require("autoprefixer");
-var sourcemaps = require("gulp-sourcemaps");
-var rename = require("gulp-rename");
-var cssnano = require("cssnano");
-//const autoprefixer = require("gulp-autoprefixer");
+const rename = require("gulp-rename");
+const sourcemaps = require("gulp-sourcemaps");
 
-gulp.task("styles", function () {
-	return gulp
-		.src("./src/*.css")
+// const gulp = require("gulp");
+// const autoprefixer = require("autoprefixer");
 
-		.pipe(postcss([autoprefixer()]))
-		.pipe(sourcemaps.init())
-		.pipe(sourcemaps.write("maps/"))
-
-		.pipe(gulp.dest("./dest"));
-});
-
-// gulp.task("rename", ["styles"], function () {
+// gulp.task("styles", function () {
+// 	return gulp
+// 		.src("./src/*.css")
+// 		.pipe(postcss([autoprefixer()]))
+// 		.pipe(sourcemaps.init())
+// 		.pipe(sourcemaps.write("maps/"))
+// 		.pipe(gulp.dest("./dest"));
+// });
+// gulp.task("rename", gulp.series("styles"), function () {
 // 	return gulp
 // 		.src("dest/example.css")
 // 		.pipe(postcss([cssnano()]))
 // 		.pipe(rename("example.min.css"))
 // 		.pipe(gulp.dest("dest/"));
 // });
+// gulp.task("default", gulp.series("rename"));
 
-// gulp.task("default", ["styles", "rename"]);
+// new approach
 
-// gulp.task("autoprefixer", () => {
-// 	// const autoprefixer = require("autoprefixer");
-// 	const sourcemaps = require("gulp-sourcemaps");
-// 	const postcss = require("gulp-postcss");
+// the plugins we need! :D
 
-// 	return (
-// 		gulp
-// 			.src("./src/*.css")
-// 			// .pipe(sourcemaps.init())
-// 			// .pipe(postcss([autoprefixer()]))
-// 			.pipe(
-// 				autoprefixer({
-// 					cascade: false,
-// 				})
-// 			)
-// 			// .pipe(sourcemaps.write("."))
-// 			.pipe(gulp.dest("./dest"))
-// 	);
-// });
+const postCSSPlugins = [autoprefixer(), cssnano()];
+
+function cssMinifySourceMapPlusAutoprefixer(callback) {
+	return src("./src/*.css")
+		.pipe(dest("./dist/css"))
+		.pipe(sourcemaps.init())
+		.pipe(postcss(postCSSPlugins))
+		.pipe(
+			rename({
+				extname: ".min.css",
+			})
+		)
+		.pipe(sourcemaps.write("maps/"))
+		.pipe(dest("./dist/css"));
+	callback();
+}
+function maps(callback) {
+	return src("./src/*.css")
+		.pipe(sourcemaps.init())
+		.pipe(sourcemaps.write("maps/"))
+		.pipe(dest("./dist/css"));
+	callback();
+}
+
+exports.cssMinifySourceMapPlusAutoprefixer = cssMinifySourceMapPlusAutoprefixer;
+exports.default = series(cssMinifySourceMapPlusAutoprefixer);
