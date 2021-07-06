@@ -1,0 +1,1 @@
+{"version":3,"sources":["example.css"],"names":[],"mappings":"AAAA,KAEC,wBAA4B,CAC5B,aAAc,CAFd,YAGD","file":"../example.min.css","sourcesContent":["body {\n\tdisplay: flex;\n\tbackground-color: aquamarine;\n\tcolor: #fz0012;\n}\n"]}

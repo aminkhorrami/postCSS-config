@@ -1,59 +1,53 @@
-// old approach
+// SASS will, by default, produce code in unminified format; the addition of
+// {outputStyle: 'compressed'} in the task will automatically compress the
+// output code.
 
-const { src, dest, series } = require("gulp");
+const { src, dest, series, watch } = require("gulp");
 const postcss = require("gulp-postcss");
-const cssnano = require("cssnano");
 const autoprefixer = require("autoprefixer");
 const rename = require("gulp-rename");
 const sourcemaps = require("gulp-sourcemaps");
+const stylelint = require("stylelint");
+const reporter = require("postcss-reporter");
+const sass = require("gulp-sass")(require("sass"));
 
-// const gulp = require("gulp");
-// const autoprefixer = require("autoprefixer");
+const stylelintRules = {
+	rules: {
+		"color-no-invalid-hex": true,
+		"declaration-colon-space-before": [2, "never"],
+		indentation: [2, 2],
+		"number-leading-zero": [2, "always"],
+	},
+};
 
-// gulp.task("styles", function () {
-// 	return gulp
-// 		.src("./src/*.css")
-// 		.pipe(postcss([autoprefixer()]))
-// 		.pipe(sourcemaps.init())
-// 		.pipe(sourcemaps.write("maps/"))
-// 		.pipe(gulp.dest("./dest"));
-// });
-// gulp.task("rename", gulp.series("styles"), function () {
-// 	return gulp
-// 		.src("dest/example.css")
-// 		.pipe(postcss([cssnano()]))
-// 		.pipe(rename("example.min.css"))
-// 		.pipe(gulp.dest("dest/"));
-// });
-// gulp.task("default", gulp.series("rename"));
+const postCSSPlugins = [
+	stylelint(stylelintRules),
+	autoprefixer(),
+	reporter({
+		clearMessages: true,
+	}),
+];
 
-// new approach
+function SASS(callback) {
+	return (
+		src("./src/*.scss")
+			// SASS
+			.pipe(sass({ outputStyle: "compressed" }).on("error", sass.logError))
+			.pipe(postcss(postCSSPlugins))
+			.pipe(sourcemaps.init())
+			.pipe(
+				rename({
+					extname: ".min.css",
+				})
+			)
 
-// the plugins we need! :D
-
-const postCSSPlugins = [autoprefixer(), cssnano()];
-
-function cssMinifySourceMapPlusAutoprefixer(callback) {
-	return src("./src/*.css")
-		.pipe(dest("./dist/css"))
-		.pipe(sourcemaps.init())
-		.pipe(postcss(postCSSPlugins))
-		.pipe(
-			rename({
-				extname: ".min.css",
-			})
-		)
-		.pipe(sourcemaps.write("maps/"))
-		.pipe(dest("./dist/css"));
-	callback();
-}
-function maps(callback) {
-	return src("./src/*.css")
-		.pipe(sourcemaps.init())
-		.pipe(sourcemaps.write("maps/"))
-		.pipe(dest("./dist/css"));
+			.pipe(sourcemaps.write("maps/"))
+			.pipe(dest("./src/ToCSS"))
+	);
 	callback();
 }
 
-exports.cssMinifySourceMapPlusAutoprefixer = cssMinifySourceMapPlusAutoprefixer;
-exports.default = series(cssMinifySourceMapPlusAutoprefixer);
+exports.default = function () {
+	// Or a composed task
+	watch("src/*.scss", series(SASS));
+};
